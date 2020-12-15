@@ -16,7 +16,6 @@ namespace SalesWebMvc.Services {
             return _context.Seller.ToList();
         }
         public void Isert(Seller obj) {
-            obj.Department = _context.Department.First();
             _context.Add(obj);
             _context.SaveChanges();
         }
