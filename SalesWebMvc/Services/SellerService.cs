@@ -12,9 +12,12 @@ namespace SalesWebMvc.Services {
         public SellerService(SalesWebMvcContext context) {
             _context = context;
         }
-
         public List<Seller> FindAll() {
             return _context.Seller.ToList();
+        }
+        public void Isert(Seller obj) {
+            _context.Add(obj);
+            _context.SaveChanges();
         }
     }
 }
