@@ -18,10 +18,12 @@ namespace SalesWebMvc.Controllers {
             _SellerService = sellerService;
             _departmentService = departmentService;
         }
+
         public IActionResult Index() {
             var list = _SellerService.FindAll();
             return View(list);
         }
+
         public IActionResult Create() {
             var departments = _departmentService.FindAll();
             var viewModel = new SellerFormViewModel { Departments = departments };
@@ -31,9 +33,15 @@ namespace SalesWebMvc.Controllers {
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(Seller seller) {
+            if (!ModelState.IsValid) {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             _SellerService.Isert(seller);
             return RedirectToAction(nameof(Index));
         }
+
         public IActionResult Delete(int? id) {
             if (id == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided!" });
@@ -62,6 +70,7 @@ namespace SalesWebMvc.Controllers {
             }
             return View(obj);
         }
+
         public IActionResult Edit(int? id) {
             if (id == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided!" });
@@ -74,9 +83,15 @@ namespace SalesWebMvc.Controllers {
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
             return View(viewModel);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller) {
+            if (!ModelState.IsValid) {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             if (id != seller.Id) {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch!" });
             }
